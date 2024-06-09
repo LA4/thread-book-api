@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { BookDTO } from './book.dto';
-import { promises } from 'dns';
+import { Types } from 'mongoose';
 
 @Controller('books')
 export class BooksController {
@@ -16,8 +16,14 @@ export class BooksController {
 
     @Get()
     getAllBooks() {
-        console.log(this.BookService.getAllBooks())
         return this.BookService.getAllBooks()
+    }
+    @Get("/:id")
+    getBook(@Param('id') id: number): Promise<BookDTO> {
+
+        console.log("controleur get book id:", id)
+
+        return this.BookService.getBook(id)
     }
 
 }

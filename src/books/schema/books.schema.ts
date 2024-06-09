@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Date, HydratedDocument, Types } from 'mongoose';
 
 export type BookDocument = HydratedDocument<Book>;
 
@@ -12,10 +12,13 @@ export class Book {
   author: string;
 
   @Prop()
-  bookGenre: string;
+  category: { type: Types.ObjectId, ref: 'Category', required: true }
 
   @Prop()
   pages: number;
+
+  @Prop()
+  created_at: Date;
 
   @Prop()
   resume: string;
