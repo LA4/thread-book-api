@@ -1,23 +1,22 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Book } from './schema/books.schema';
+import { Book, BookDocument } from './schema/books.schema';
 import { Model, Types } from 'mongoose';
 import { BookDTO } from './book.dto';
 
 
-
-
 @Injectable()
 export class BooksService {
-    constructor(@InjectModel(Book.name) private bookModel: Model<BookDTO>) { }
+    constructor(
+        @InjectModel(Book.name) private bookModel: Model<BookDocument>,
+    ) { }
 
 
+    async createBook(BookDTO: BookDTO) {
 
-    async createBook(BookDTO: BookDTO): Promise<BookDTO> {
-
-        const existingBook: BookDTO[] = await this.bookModel.find({ title: BookDTO.title, author: BookDTO.author })
+        const existingBook = await this.bookModel.find({ title: BookDTO.title, author: BookDTO.author })
         console.log("existing book:", existingBook.length)
-        if (existingBook.length > 0) {
+        if (existingBook) {
             throw new ConflictException('This book was already register')
         }
 
@@ -27,14 +26,14 @@ export class BooksService {
 
     }
 
-    async getAllBooks(): Promise<BookDTO[]> {
+    async getAllBooks() {
 
         const allBooks = await this.bookModel.find()
         console.log("All books", allBooks)
         return allBooks
 
     }
-    async getBook(id: number): Promise<BookDTO> {
+    async getBook(id: string) {
         if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid ID format');
         }

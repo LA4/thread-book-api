@@ -15,4 +15,9 @@ export class CategoryService {
     async getCategory() {
         return "hey tgjiq is your choosed category"
     }
+    async getAllCategories() {
+
+
+        return "This are all categories"
+    }
 }

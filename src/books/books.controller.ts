@@ -1,7 +1,6 @@
-import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { BookDTO } from './book.dto';
-import { Types } from 'mongoose';
 
 @Controller('books')
 export class BooksController {
@@ -9,7 +8,7 @@ export class BooksController {
 
 
     @Post('/post')
-    async createBook(@Body() BookDTO: BookDTO): Promise<BookDTO> {
+    async createBook(@Body() BookDTO: BookDTO) {
 
         return this.BookService.createBook(BookDTO)
     }
@@ -19,7 +18,7 @@ export class BooksController {
         return this.BookService.getAllBooks()
     }
     @Get("/:id")
-    getBook(@Param('id') id: number): Promise<BookDTO> {
+    getBook(@Param('id') id: string) {
 
         console.log("controleur get book id:", id)
 

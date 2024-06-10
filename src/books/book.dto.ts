@@ -1,3 +1,5 @@
+
+import { Type } from "class-transformer";
 import { IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Date, Types } from "mongoose";
 
@@ -11,12 +13,17 @@ export class BookDTO {
     @MinLength(3)
     author: string;
 
-    @IsNotEmpty()
-    @MinLength(3)
-    category: Types.ObjectId
+    // @IsNotEmpty()
+    // @MinLength(3)
+    // category: string;
+
+
+    category: string
+
 
     @IsNotEmpty()
     pages: number;
+
     @IsNotEmpty()
     created_at: Date;
 
@@ -25,5 +32,5 @@ export class BookDTO {
     resume: string;
 
     @IsString()
-    opignon: string;
+    opinion: string;
 }
