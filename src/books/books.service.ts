@@ -3,12 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from './schema/books.schema';
 import { Model, Types } from 'mongoose';
 import { BookDTO } from './book.dto';
+import { Category, CategoryDocument } from 'src/category/schema/category.schema';
 
 
 @Injectable()
 export class BooksService {
     constructor(
         @InjectModel(Book.name) private bookModel: Model<BookDocument>,
+        @InjectModel(Category.name) private categoryModel: Model<CategoryDocument> // Ca marche pas
     ) { }
 
 
@@ -19,10 +21,13 @@ export class BooksService {
         if (existingBook) {
             throw new ConflictException('This book was already register')
         }
+        const category = await this.categoryModel.findOne({ name: BookDTO.category })
+        if (!category) {
+            throw new NotFoundException('Category not found');
+        }
+        const createBook = new this.bookModel({ ...BookDTO, category: category._id });
 
-        const createBook = new this.bookModel(BookDTO)
-
-        return createBook.save()
+        return createBook.save();
 
     }
 
