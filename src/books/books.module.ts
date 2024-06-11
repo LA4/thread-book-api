@@ -5,12 +5,17 @@ import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
 import { CategoryService } from 'src/category/category.service';
 import { Category, CategorySchema } from 'src/category/schema/category.schema';
+import { Author, AuthorSchema } from 'src/author/schema/author.schema';
+import { AuthorService } from 'src/author/author.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Book.name, schema: BookSchema }]), MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }])
+  imports: [
+    MongooseModule.forFeature([{ name: Book.name, schema: BookSchema }]),
+    MongooseModule.forFeature([{ name: Category.name, schema: CategorySchema }]),
+    MongooseModule.forFeature([{ name: Author.name, schema: AuthorSchema }])
   ],
   controllers: [BooksController],
-  providers: [BooksService, CategoryService],
+  providers: [BooksService, CategoryService, AuthorService],
 
 })
 export class BooksModule { }

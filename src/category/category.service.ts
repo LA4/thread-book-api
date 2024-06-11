@@ -10,10 +10,10 @@ export class CategoryService {
 
 
     async createCategory(category: CategoryDTO) {
-        const existingCategory = await this.categoryModel.find({ name: category.name })
+        const existingCategory = await this.categoryModel.findOne({ name: category.name })
         console.log(existingCategory)
         if (!existingCategory) {
-            throw new ConflictException('This book was already register')
+            throw new ConflictException('This category was already register')
         }
 
         const newCategory = new this.categoryModel(category)
@@ -28,13 +28,13 @@ export class CategoryService {
 
     async getAllCategories() {
 
-        const allBooks = await this.categoryModel.find().exec()
-        if (!allBooks) {
+        const AllCategories = await this.categoryModel.find().exec()
+        if (!AllCategories) {
             throw new NotFoundException("No category found")
         }
-        if (allBooks.length === 0) {
+        if (AllCategories.length === 0) {
             return "No category yet"
         }
-        return allBooks
+        return AllCategories
     }
 }

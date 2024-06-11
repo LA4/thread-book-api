@@ -2,6 +2,7 @@
 import { Type } from "class-transformer";
 import { IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Date, Types } from "mongoose";
+import { Author } from "src/author/schema/author.schema";
 import { Category } from "src/category/schema/category.schema";
 
 export class BookDTO {
@@ -10,9 +11,9 @@ export class BookDTO {
     @MinLength(3)
     title: string;
 
-    @IsNotEmpty()
-    @MinLength(3)
-    author: string;
+
+    @Type(() => Author)
+    author: Author;
 
     @Type(() => Category)
     category: Category;

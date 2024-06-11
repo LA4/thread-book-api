@@ -4,33 +4,42 @@ import { Book, BookDocument } from './schema/books.schema';
 import { Model, Types } from 'mongoose';
 import { BookDTO } from './book.dto';
 import { Category, CategoryDocument } from 'src/category/schema/category.schema';
+import { Author, AuthorDocument } from 'src/author/schema/author.schema';
 
 
 @Injectable()
 export class BooksService {
     constructor(
         @InjectModel(Book.name) private bookModel: Model<BookDocument>,
-        @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
+        @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
+        @InjectModel(Author.name) private authorModel: Model<AuthorDocument>
 
     ) { }
 
     async createBook(BookDTO: BookDTO) {
 
-        const existingBook = await this.bookModel.findOne({ title: BookDTO.title, author: BookDTO.author }).exec()
+        const existingBook = await this.bookModel.findOne({ title: BookDTO.title }).exec()
         console.log("existing book:", existingBook)
         if (existingBook) {
             throw new ConflictException('This book was already register')
         }
 
-        const category = await this.categoryModel.findOne({ name: BookDTO.category })
+        let category = await this.categoryModel.findOne({ name: BookDTO.category })
         if (!category) {
             const newCategory = new this.categoryModel({ name: BookDTO.category })
-            newCategory.save()
+            category = await newCategory.save()
+        }
+        let author = await this.authorModel.findOne({ name: BookDTO.author })
+        if (!author) {
+            const newAuthor = new this.authorModel({ name: BookDTO.author })
+            author = await newAuthor.save()
         }
 
-        const createBook = new this.bookModel({ ...BookDTO, category: category._id });
+        const createBook = new this.bookModel({ ...BookDTO, category: category._id, author: author._id });
+
 
         return createBook.save();
+
 
     }
 

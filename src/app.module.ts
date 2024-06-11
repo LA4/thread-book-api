@@ -5,6 +5,7 @@ import { BooksModule } from './books/books.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
+import { AuthorModule } from './author/author.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CategoryModule } from './category/category.module';
     }), MongooseModule.forRoot(process.env.DATABASE),
     BooksModule,
     CategoryModule,
+    AuthorModule,
   ],
   controllers: [AppController,],
   providers: [AppService,],
