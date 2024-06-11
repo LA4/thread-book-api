@@ -10,21 +10,24 @@ import { Category, CategoryDocument } from 'src/category/schema/category.schema'
 export class BooksService {
     constructor(
         @InjectModel(Book.name) private bookModel: Model<BookDocument>,
-        @InjectModel(Category.name) private categoryModel: Model<CategoryDocument> // Ca marche pas
-    ) { }
+        @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
 
+    ) { }
 
     async createBook(BookDTO: BookDTO) {
 
-        const existingBook = await this.bookModel.find({ title: BookDTO.title, author: BookDTO.author })
-        console.log("existing book:", existingBook.length)
+        const existingBook = await this.bookModel.findOne({ title: BookDTO.title, author: BookDTO.author }).exec()
+        console.log("existing book:", existingBook)
         if (existingBook) {
             throw new ConflictException('This book was already register')
         }
+
         const category = await this.categoryModel.findOne({ name: BookDTO.category })
         if (!category) {
-            throw new NotFoundException('Category not found');
+            const newCategory = new this.categoryModel({ name: BookDTO.category })
+            newCategory.save()
         }
+
         const createBook = new this.bookModel({ ...BookDTO, category: category._id });
 
         return createBook.save();

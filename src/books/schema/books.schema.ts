@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Date, HydratedDocument, Types } from 'mongoose';
 import { Category } from '../../category/schema/category.schema';
+import { Type } from 'class-transformer';
 
 export type BookDocument = HydratedDocument<Book>;
 @Schema()
@@ -12,7 +13,8 @@ export class Book {
   author: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
-  category: Category;
+  @Type(() => Category)
+  category: Category
   // @Prop({ type: String })
   // category: string
 

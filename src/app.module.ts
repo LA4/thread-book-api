@@ -5,10 +5,6 @@ import { BooksModule } from './books/books.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
-import { CategoryController } from './category/category.controller';
-import { BooksController } from './books/books.controller';
-import { BooksService } from './books/books.service';
-import { CategoryService } from './category/category.service';
 
 @Module({
   imports: [
