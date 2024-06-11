@@ -7,7 +7,7 @@ export class BooksController {
     constructor(private readonly BookService: BooksService) { }
 
 
-    @Post('/post')
+    @Post('/new')
     async createBook(@Body() BookDTO: BookDTO) {
         console.log("controller book, DTO:", BookDTO)
 
