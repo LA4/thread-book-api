@@ -3,6 +3,7 @@ import mongoose, { Date, HydratedDocument, Types } from 'mongoose';
 import { Category } from '../../category/schema/category.schema';
 import { Type } from 'class-transformer';
 import { Author } from 'src/author/schema/author.schema';
+import { User } from 'src/user/schema/user.schema';
 
 export type BookDocument = HydratedDocument<Book>;
 @Schema()
@@ -17,6 +18,10 @@ export class Book {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
   @Type(() => Category)
   category: Category
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Type(() => User)
+  user: User
 
 
   @Prop()

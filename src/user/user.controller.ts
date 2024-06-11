@@ -13,6 +13,11 @@ export class UserController {
 
         return this.UserService.getUserById(id)
     }
+    @Get("/books/:userId")
+    getBooksFromUser(@Param('userId') userId: string) {
+
+        return this.UserService.getBooksFromUser(userId)
+    }
     @Post('/new')
     async createUser(@Body() user: UserDTO) {
 

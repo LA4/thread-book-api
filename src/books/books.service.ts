@@ -5,6 +5,7 @@ import { Model, Types } from 'mongoose';
 import { BookDTO } from './book.dto';
 import { Category, CategoryDocument } from 'src/category/schema/category.schema';
 import { Author, AuthorDocument } from 'src/author/schema/author.schema';
+import { User, UserDocument } from 'src/user/schema/user.schema';
 
 
 @Injectable()
@@ -12,11 +13,14 @@ export class BooksService {
     constructor(
         @InjectModel(Book.name) private bookModel: Model<BookDocument>,
         @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
-        @InjectModel(Author.name) private authorModel: Model<AuthorDocument>
+        @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
+        @InjectModel(User.name) private userModel: Model<UserDocument>
 
     ) { }
 
     async createBook(BookDTO: BookDTO) {
+
+
 
         const existingBook = await this.bookModel.findOne({ title: BookDTO.title }).exec()
         console.log("existing book:", existingBook)
@@ -34,8 +38,12 @@ export class BooksService {
             const newAuthor = new this.authorModel({ name: BookDTO.author })
             author = await newAuthor.save()
         }
+        let user = await this.userModel.findById(BookDTO.user)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
 
-        const createBook = new this.bookModel({ ...BookDTO, category: category._id, author: author._id });
+        const createBook = new this.bookModel({ ...BookDTO, category: category._id, author: author._id, user: user._id });
 
 
         return createBook.save();
@@ -45,9 +53,8 @@ export class BooksService {
 
     async getAllBooks() {
 
-        const allBooks = await this.bookModel.find()
-        console.log("All books", allBooks)
-        return allBooks
+        const allBooks = await this.bookModel.find().populate('category').populate('author').populate('user').exec();
+        return allBooks;
 
     }
     async getBook(id: string) {

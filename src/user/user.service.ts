@@ -3,11 +3,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { UserDTO } from './user.dto';
+import { Book, BookDocument } from 'src/books/schema/books.schema';
 
 @Injectable()
 export class UserService {
 
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
+    constructor(
+        @InjectModel(User.name) private userModel: Model<UserDocument>,
+        @InjectModel(Book.name) private bookModel: Model<BookDocument>
+
+    ) { }
 
 
     async getUserById(userId: string) {
@@ -31,6 +36,14 @@ export class UserService {
         return createUser.save()
 
 
+    }
+    async getBooksFromUser(userId: string) {
+        const user = await this.userModel.findById(userId).exec()
+        if (!user) {
+            throw new BadRequestException("User does'nt exist")
+        }
+        const books = await this.bookModel.find({ user: userId }).exec()
+        return books
     }
 
 }
