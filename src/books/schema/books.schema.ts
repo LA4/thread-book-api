@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { Author } from 'src/author/schema/author.schema';
 import { User } from 'src/user/schema/user.schema';
 import { BookStatus } from '../book.dto';
+import { Publisher } from 'src/publisher/schema/publisher.schema';
 
 export type BookDocument = HydratedDocument<Book>;
 @Schema()
@@ -15,6 +16,10 @@ export class Book {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Author.name })
   @Type(() => Author)
   author: Author
+  
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Publisher.name })
+  @Type(() => Publisher)
+  publisher: Publisher
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
   @Type(() => Category)

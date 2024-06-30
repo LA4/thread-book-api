@@ -6,6 +6,7 @@ import { BookDTO } from './book.dto';
 import { Category, CategoryDocument } from 'src/category/schema/category.schema';
 import { Author, AuthorDocument } from 'src/author/schema/author.schema';
 import { User, UserDocument } from 'src/user/schema/user.schema';
+import { Publisher, PublisherDocument } from 'src/publisher/schema/publisher.schema';
 
 
 @Injectable()
@@ -14,14 +15,13 @@ export class BooksService {
         @InjectModel(Book.name) private bookModel: Model<BookDocument>,
         @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
         @InjectModel(Author.name) private authorModel: Model<AuthorDocument>,
+        @InjectModel(Publisher.name) private publisherModel: Model<PublisherDocument>,
         @InjectModel(User.name) private userModel: Model<UserDocument>
 
     ) { }
 
     async createBook(BookDTO: BookDTO) {
-        console.log("book service", BookDTO)
         const existingBook = await this.bookModel.findOne({ title: BookDTO.title }).exec()
-        console.log("existing book:", existingBook)
         if (existingBook) {
             throw new ConflictException('This book was already register')
         }
@@ -31,6 +31,13 @@ export class BooksService {
             const newCategory = new this.categoryModel({ name: BookDTO.category })
             category = await newCategory.save()
         }
+
+        let publisher = await this.publisherModel.findOne({ name: BookDTO.publisher })
+        if (!publisher) {
+            const newPublisher = new this.publisherModel({ name: BookDTO.publisher })
+            publisher = await newPublisher.save()
+        }
+
         let author = await this.authorModel.findOne({ name: BookDTO.author })
         if (!author) {
             const newAuthor = new this.authorModel({ name: BookDTO.author })
@@ -41,31 +48,41 @@ export class BooksService {
             throw new NotFoundException('User not found');
         }
 
-        const createBook = new this.bookModel({ ...BookDTO, category: category._id, author: author._id, user: user._id });
-
+        const createBook = new this.bookModel({ 
+            ...BookDTO, 
+            category: category._id,
+            author: author._id,
+            publisher: publisher._id,
+            user: user._id 
+        });
 
         return createBook.save();
-
 
     }
 
     async getAllBooks() {
 
-        const allBooks = await this.bookModel.find().populate('category').populate('author').populate('user').exec();
+        const allBooks = await this.bookModel.find()
+        .populate('category')
+        .populate('author')
+        .populate('publisher')
+        .populate('user')
+        .exec();
+       
         return allBooks;
 
     }
 
     async getBookReading() {
-        const bookReading = await this.bookModel.find({ status: "CURRENTLY_READING" }).populate("author").populate("category").exec()
+        const bookReading = await this.bookModel.find({ status: "CURRENTLY_READING" }).populate("author").populate("category").populate("publisher").exec()
         return bookReading
     }
     async getBookRead() {
-        const bookReading = await this.bookModel.find({ status: "READ" }).populate("author").populate("category").exec()
+        const bookReading = await this.bookModel.find({ status: "READ" }).populate("author").populate("category").populate("publisher").exec()
         return bookReading
     }
     async getBookToBeRead() {
-        const bookReading = await this.bookModel.find({ status: "TO_BE_READ" }).populate("author").populate("category").exec()
+        const bookReading = await this.bookModel.find({ status: "TO_BE_READ" }).populate("author").populate("category").populate("publisher").exec()
         return bookReading
     }
 

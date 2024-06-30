@@ -4,6 +4,7 @@ import { IsBoolean, IsEnum, IsNotEmpty, IsString, MinLength } from "class-valida
 import { Date, Types } from "mongoose";
 import { Author } from "src/author/schema/author.schema";
 import { Category } from "src/category/schema/category.schema";
+import { Publisher } from "src/publisher/schema/publisher.schema";
 import { User } from "src/user/schema/user.schema";
 export enum BookStatus {
     READ = 'READ',
@@ -23,8 +24,12 @@ export class BookDTO {
     @Type(() => Category)
     category: Category;
 
+    @Type(() => Publisher)
+    publisher: Publisher;
+
     @Type(() => User)
     user: User;
+    
 
 
     @IsNotEmpty()

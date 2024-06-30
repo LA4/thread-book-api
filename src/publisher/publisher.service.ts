@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Publisher } from './schema/publisher.schema';
 import { Model } from 'mongoose';
 import { PublisherDTO } from './publisher.dto';
-import { publish } from 'rxjs';
 
 @Injectable()
 export class PublisherService {
