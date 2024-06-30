@@ -3,10 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './schema/category.schema';
 import { CategoryDTO } from './category.dto';
 import { Model } from 'mongoose';
+import { Book } from 'src/books/schema/books.schema';
+import { BookDTO } from 'src/books/book.dto';
 
 @Injectable()
 export class CategoryService {
-    constructor(@InjectModel(Category.name) private categoryModel: Model<CategoryDTO>) { }
+    constructor(
+        @InjectModel(Category.name) private categoryModel: Model<CategoryDTO>,
+        @InjectModel(Book.name) private bookModel: Model<BookDTO>
+    ) { }
 
 
     async createCategory(category: CategoryDTO) {
@@ -22,9 +27,6 @@ export class CategoryService {
         return newCategory.save()
     }
 
-    async getCategory() {
-        return "hey tgjiq is your choosed category"
-    }
 
     async getAllCategories() {
 
@@ -37,4 +39,18 @@ export class CategoryService {
         }
         return AllCategories
     }
+    async getBookByCategory(category: string) {
+
+        const findCategory = await this.categoryModel.findOne({ name: category }).exec()
+        const bookByCategory = await this.bookModel.find({ category: findCategory._id }).exec()
+        if (!bookByCategory) {
+            throw new NotFoundException("No category found")
+        }
+        if (bookByCategory.length === 0) {
+            return "No category yet"
+        }
+        console.log("bookByCategory", bookByCategory)
+        return bookByCategory
+    }
+
 }

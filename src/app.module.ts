@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
 import { AuthorModule } from './author/author.module';
 import { UserModule } from './user/user.module';
+import { PublisherModule } from './publisher/publisher.module';
+
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { UserModule } from './user/user.module';
     CategoryModule,
     AuthorModule,
     UserModule,
+    PublisherModule,
   ],
   controllers: [AppController,],
   providers: [AppService,],

@@ -4,6 +4,7 @@ import { Category } from '../../category/schema/category.schema';
 import { Type } from 'class-transformer';
 import { Author } from 'src/author/schema/author.schema';
 import { User } from 'src/user/schema/user.schema';
+import { BookStatus } from '../book.dto';
 
 export type BookDocument = HydratedDocument<Book>;
 @Schema()
@@ -35,6 +36,9 @@ export class Book {
 
   @Prop()
   opinion: string;
+
+  @Prop()
+  status: string;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

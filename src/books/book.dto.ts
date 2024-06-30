@@ -1,11 +1,15 @@
 
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsBoolean, IsEnum, IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Date, Types } from "mongoose";
 import { Author } from "src/author/schema/author.schema";
 import { Category } from "src/category/schema/category.schema";
 import { User } from "src/user/schema/user.schema";
-
+export enum BookStatus {
+    READ = 'READ',
+    CURRENTLY_READING = 'CURRENTLY_READING',
+    TO_BE_READ = 'TO_BE_READ',
+}
 export class BookDTO {
 
     @IsNotEmpty()
@@ -35,4 +39,7 @@ export class BookDTO {
 
     @IsString()
     opinion: string;
+
+    @IsEnum(BookStatus)
+    status: BookStatus;
 }

@@ -19,9 +19,7 @@ export class BooksService {
     ) { }
 
     async createBook(BookDTO: BookDTO) {
-
-
-
+        console.log("book service", BookDTO)
         const existingBook = await this.bookModel.findOne({ title: BookDTO.title }).exec()
         console.log("existing book:", existingBook)
         if (existingBook) {
@@ -55,6 +53,43 @@ export class BooksService {
 
         const allBooks = await this.bookModel.find().populate('category').populate('author').populate('user').exec();
         return allBooks;
+
+    }
+
+    async getBookReading() {
+        const bookReading = await this.bookModel.find({ status: "CURRENTLY_READING" }).populate("author").populate("category").exec()
+        return bookReading
+    }
+    async getBookRead() {
+        const bookReading = await this.bookModel.find({ status: "READ" }).populate("author").populate("category").exec()
+        return bookReading
+    }
+    async getBookToBeRead() {
+        const bookReading = await this.bookModel.find({ status: "TO_BE_READ" }).populate("author").populate("category").exec()
+        return bookReading
+    }
+
+
+
+    async putBookInRead(book_id: string, isReading: boolean) {
+
+        if (isReading) {
+            const booksInRead = await this.bookModel.findByIdAndUpdate(
+                book_id,
+                { $set: { isReading: false } },
+                { new: true }
+            ).exec()
+            return booksInRead
+        }
+        if (isReading === false) {
+            const booksInRead = await this.bookModel.findByIdAndUpdate(
+
+                book_id,
+                { $set: { isReading: true } },
+                { new: true }
+            ).exec()
+            return booksInRead
+        }
 
     }
     async getBook(id: string) {
