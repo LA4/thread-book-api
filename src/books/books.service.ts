@@ -113,13 +113,11 @@ export class BooksService {
         if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid ID format');
         }
-        console.log("book id:", id)
-        const getBook = await this.bookModel.findById(id).exec()
-        console.log(getBook)
+        const getBook = await this.bookModel.findById(id).populate('author').populate('category').populate('publisher').exec()
         if (!getBook) {
             throw new NotFoundException('This book doe\'snt exist ')
         }
-        console.log("book:", !getBook)
+       
         return getBook
 
     }
