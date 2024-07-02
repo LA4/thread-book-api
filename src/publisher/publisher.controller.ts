@@ -8,9 +8,8 @@ export class PublisherController {
     constructor(private readonly PublisherService: PublisherService) { }
 
     @Post('/new')
-    createPublisher(@Body() publisherDTO: PublisherDTO) {
-
-        return this.PublisherService.createPublisher(publisherDTO)
+    createPublisher(@Body() publisher: PublisherDTO) {
+        return this.PublisherService.createPublisher(publisher)
     }
 
 }
