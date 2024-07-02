@@ -51,7 +51,7 @@ export class BooksService {
 
     async getAllBooks() {
 
-        const allBooks = await this.bookModel.find().populate('category').populate('author').populate('user').exec();
+        const allBooks = await this.bookModel.find().populate('category').populate('author').populate('user').populate('publisher').exec();
         return allBooks;
 
     }
