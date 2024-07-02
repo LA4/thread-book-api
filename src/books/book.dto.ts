@@ -30,10 +30,11 @@ export class BookDTO {
     @Type(() => User)
     user: User;
 
-
-
     @IsNotEmpty()
     pages: number;
+
+    @IsNotEmpty()
+    pageRead: number;
 
     @IsNotEmpty()
     created_at: Date

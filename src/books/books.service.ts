@@ -7,6 +7,7 @@ import { Category, CategoryDocument } from 'src/category/schema/category.schema'
 import { Author, AuthorDocument } from 'src/author/schema/author.schema';
 import { User, UserDocument } from 'src/user/schema/user.schema';
 import { Publisher, PublisherDocument } from 'src/publisher/schema/publisher.schema';
+import { BookUpdated } from './books.controller';
 
 
 @Injectable()
@@ -119,6 +120,48 @@ export class BooksService {
         }
 
         return getBook
+    }
+
+
+    async modifyBook(BookUpdated: BookUpdated) {
+
+        const existingBook = await this.bookModel.findById(BookUpdated._id).exec()
+        if (!existingBook) {
+            throw new ConflictException('This book do\'nt exist')
+        }
+
+        const author = await this.authorModel.findOne({ name: BookUpdated.author }).exec();
+        if (!author) {
+            throw new ConflictException('This author does not exist');
+        }
+
+        const category = await this.categoryModel.findOne({ name: BookUpdated.category }).exec();
+        if (!category) {
+            throw new ConflictException('This category does not exist');
+        }
+        const publisher = await this.publisherModel.findOne({ name: BookUpdated.publisher }).exec();
+        if (!publisher) {
+            throw new ConflictException('This publisher does not exist');
+        }
+
+
+        const updatedBook = await this.bookModel.findByIdAndUpdate(
+            BookUpdated._id,
+            {
+                ...BookUpdated,
+                author: author,
+                category: category,
+                publisher: publisher,
+
+            }, { new: true })
+        console.log(updatedBook)
+        return updatedBook
 
     }
+
+    async deleteBook(bookId: string) {
+        const deleteBook = await this.bookModel.deleteOne({ _id: bookId }).exec()
+        return deleteBook
+    }
+
 }

@@ -16,7 +16,7 @@ export class Book {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Author.name })
   @Type(() => Author)
   author: Author
-  
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Publisher.name })
   @Type(() => Publisher)
   publisher: Publisher
@@ -32,6 +32,9 @@ export class Book {
 
   @Prop()
   pages: number;
+
+  @Prop()
+  pageRead: number;
 
   @Prop({ type: Date, default: new Date() })
   created_at: Date;
