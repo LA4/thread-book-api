@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module';
 import { AuthorModule } from './author/author.module';
 import { UserModule } from './user/user.module';
 import { PublisherModule } from './publisher/publisher.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { PublisherModule } from './publisher/publisher.module';
     AuthorModule,
     UserModule,
     PublisherModule,
+    AuthModule,
   ],
   controllers: [AppController,],
   providers: [AppService],
