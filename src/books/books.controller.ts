@@ -58,7 +58,6 @@ export class BooksController {
 
     @Patch("/update")
     modifyBook(@Body() BookUpdated: BookUpdated) {
-        console.log("receive modifyBook:", BookUpdated)
         return this.BookService.modifyBook(BookUpdated)
 
     }

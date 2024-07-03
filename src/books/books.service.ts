@@ -130,20 +130,24 @@ export class BooksService {
             throw new ConflictException('This book do\'nt exist')
         }
 
-        const author = await this.authorModel.findOne({ name: BookUpdated.author }).exec();
+        let author = await this.authorModel.findOne({ name: BookUpdated.author }).exec();
         if (!author) {
-            throw new ConflictException('This author does not exist');
+            const newauthor = new this.authorModel({ name: BookUpdated.author })
+            author = await newauthor.save()
         }
 
-        const category = await this.categoryModel.findOne({ name: BookUpdated.category }).exec();
+        let category = await this.categoryModel.findOne({ name: BookUpdated.category }).exec();
         if (!category) {
-            throw new ConflictException('This category does not exist');
-        }
-        const publisher = await this.publisherModel.findOne({ name: BookUpdated.publisher }).exec();
-        if (!publisher) {
-            throw new ConflictException('This publisher does not exist');
+            const newCategory = new this.categoryModel({ name: BookUpdated.category })
+            category = await newCategory.save()
         }
 
+
+        let publisher = await this.publisherModel.findOne({ name: BookUpdated.publisher }).exec();
+        if (!publisher) {
+            const newpublisher = new this.publisherModel({ name: BookUpdated.publisher })
+            publisher = await newpublisher.save()
+        }
 
         const updatedBook = await this.bookModel.findByIdAndUpdate(
             BookUpdated._id,

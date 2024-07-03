@@ -53,4 +53,10 @@ export class CategoryService {
         return bookByCategory
     }
 
+    async deleteCategory(categoryId: string) {
+
+        const deletedCategory = await this.categoryModel.deleteOne({ id: categoryId }).exec()
+        return deletedCategory
+
+    }
 }

@@ -9,4 +9,4 @@ export class Author {
     @Prop()
     name: string
 }
-export const AuthorSchema = SchemaFactory.createForClass(Category)
+export const AuthorSchema = SchemaFactory.createForClass(Author)

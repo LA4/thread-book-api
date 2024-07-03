@@ -19,6 +19,7 @@ import { Publisher, PublisherSchema } from 'src/publisher/schema/publisher.schem
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [UserController],
-  providers: [UserService, BooksService]
+  providers: [UserService, BooksService],
+  exports: [UserService]
 })
 export class UserModule { }

@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsNotEmpty, MinLength } from "class-validator";
+import { isObjectIdOrHexString } from "mongoose";
 import { Book } from "src/books/schema/books.schema";
 
 export class UserDTO {
@@ -17,3 +18,4 @@ export class UserDTO {
     @Type(() => Book)
     books: Book[];
 }
+

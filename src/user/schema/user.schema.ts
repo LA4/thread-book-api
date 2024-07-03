@@ -15,8 +15,8 @@ export class User {
     @Prop()
     password: string
 
-    @Type(() => Book)
-    books: Book[];
+    // @Type(() => Book)
+    // books: Book[];
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

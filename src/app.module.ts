@@ -22,7 +22,7 @@ import { PublisherModule } from './publisher/publisher.module';
     PublisherModule,
   ],
   controllers: [AppController,],
-  providers: [AppService,],
+  providers: [AppService],
 })
 export class AppModule {
 }
