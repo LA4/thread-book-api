@@ -19,3 +19,19 @@ export class UserDTO {
     books: Book[];
 }
 
+
+export class UserLoginDTO {
+
+    @MinLength(3)
+    @IsNotEmpty()
+    username: string
+
+    @IsNotEmpty()
+    email: string
+
+    @MinLength(8)
+    @IsNotEmpty()
+    password: string
+
+}
+

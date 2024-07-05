@@ -11,6 +11,11 @@ import { User, UserSchema } from 'src/user/schema/user.schema';
 import { UserService } from 'src/user/user.service';
 import { Publisher, PublisherSchema } from 'src/publisher/schema/publisher.schema';
 import { PublisherService } from 'src/publisher/publisher.service';
+import { UserModule } from 'src/user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { AuthService } from 'src/auth/auth.service';
+import { UserController } from 'src/user/user.controller';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,9 +24,10 @@ import { PublisherService } from 'src/publisher/publisher.service';
     MongooseModule.forFeature([{ name: Author.name, schema: AuthorSchema }]),
     MongooseModule.forFeature([{ name: Publisher.name, schema: PublisherSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    AuthModule
   ],
-  controllers: [BooksController],
-  providers: [BooksService, CategoryService, AuthorService, PublisherService, UserService],
+  controllers: [BooksController, UserController],
+  providers: [BooksService, CategoryService, AuthorService, PublisherService, UserService, JwtService],
 
 })
 export class BooksModule { }

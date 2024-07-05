@@ -16,6 +16,12 @@ export class AppController {
 
     return this.authService.login(req.user)
   }
+
+  @Post('auth/signUp')
+  async signUp(@Request() req) {
+    console.log(req.user)
+    // return this.authService.validateUser(req.user)
+  }
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {

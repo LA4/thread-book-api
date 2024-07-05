@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 
@@ -24,8 +24,9 @@ export class AuthService {
         }
         return null;
     }
+
     async login(user: any) {
-        const payload = { username: user.username, bub: user.userId }
+        const payload = { email: user.email, sub: user.userId }
         return {
             access_token: this.jwtService.sign(payload)
         }

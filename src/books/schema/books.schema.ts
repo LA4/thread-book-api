@@ -10,22 +10,25 @@ import { Publisher } from 'src/publisher/schema/publisher.schema';
 export type BookDocument = HydratedDocument<Book>;
 @Schema()
 export class Book {
+  constructor() {
+    console.log(User.name)
+  }
   @Prop()
   title: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Author.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Author" })
   @Type(() => Author)
   author: Author
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Publisher.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Publisher" })
   @Type(() => Publisher)
   publisher: Publisher
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Category.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Category" })
   @Type(() => Category)
   category: Category
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
   @Type(() => User)
   user: User
 
