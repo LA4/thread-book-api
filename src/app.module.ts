@@ -9,7 +9,8 @@ import { AuthorModule } from './author/author.module';
 import { UserModule } from './user/user.module';
 import { PublisherModule } from './publisher/publisher.module';
 import { AuthModule } from './auth/auth.module';
-
+import { FilesModule } from './files/files.module';
+import { FlilesService } from './fliles/fliles.service';
 
 @Module({
   imports: [
@@ -22,9 +23,10 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     PublisherModule,
     AuthModule,
+    FilesModule,
   ],
   controllers: [AppController,],
-  providers: [AppService],
+  providers: [AppService, FlilesService],
 })
 export class AppModule {
 }

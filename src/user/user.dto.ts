@@ -22,6 +22,24 @@ export class UserDTO {
 
 export class UserLoginDTO {
 
+    @IsNotEmpty()
+    id?: string
+    @MinLength(3)
+    @IsNotEmpty()
+    username: string
+
+    @IsNotEmpty()
+    email: string
+
+    @MinLength(8)
+    @IsNotEmpty()
+    password: string
+
+}
+
+
+export class UserRegisterDTO {
+
     @MinLength(3)
     @IsNotEmpty()
     username: string

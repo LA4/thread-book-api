@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { InjectModel } from '@nestjs/mongoose';
 import { Book, BookDocument } from './schema/books.schema';
 import { Model, Types } from 'mongoose';
-import { BookDTO } from './book.dto';
+import { BookDTO, BookStatus } from './book.dto';
 import { Category, CategoryDocument } from 'src/category/schema/category.schema';
 import { Author, AuthorDocument } from 'src/author/schema/author.schema';
 import { User, UserDocument } from 'src/user/schema/user.schema';
@@ -22,7 +22,13 @@ export class BooksService {
     ) { }
 
     async createBook(BookDTO: BookDTO) {
-        const existingBook = await this.bookModel.findOne({ title: BookDTO.title }).exec()
+
+        let user = await this.userModel.findById(BookDTO.user)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const existingBook = await this.bookModel.findOne({ user: user._id, title: BookDTO.title }).exec()
         if (existingBook) {
             throw new ConflictException('This book was already register')
         }
@@ -44,10 +50,6 @@ export class BooksService {
             const newAuthor = new this.authorModel({ name: BookDTO.author })
             author = await newAuthor.save()
         }
-        let user = await this.userModel.findById(BookDTO.user)
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
 
         const createBook = new this.bookModel({
             ...BookDTO,
@@ -61,56 +63,79 @@ export class BooksService {
 
     }
 
-    async getAllBooks() {
-
-        const allBooks = await this.bookModel.find()
+    async getAllBooks(userId: string, documentToShip = 0, limitOfDocuments?: number, startId?: string) {
+        let user = await this.userModel.findById(userId)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        const query = this.bookModel.find({
+            user: user._id,
+            ...(startId && { _id: { $gt: startId } })
+        })
+            .sort({ _id: -1 })
             .populate('category')
             .populate('author')
             .populate('publisher')
-            .populate('user')
-            .exec();
+            .skip(documentToShip)
 
-        return allBooks;
-
-    }
-
-    async getBookReading() {
-        const bookReading = await this.bookModel.find({ status: "CURRENTLY_READING" }).populate("author").populate("category").populate("publisher").exec()
-        return bookReading
-    }
-    async getBookRead() {
-        const bookReading = await this.bookModel.find({ status: "READ" }).populate("author").populate("category").populate("publisher").exec()
-        return bookReading
-    }
-    async getBookToBeRead() {
-        const bookReading = await this.bookModel.find({ status: "TO_BE_READ" }).populate("author").populate("category").populate("publisher").exec()
-        return bookReading
-    }
-
-
-
-    async putBookInRead(book_id: string, isReading: boolean) {
-
-        if (isReading) {
-            const booksInRead = await this.bookModel.findByIdAndUpdate(
-                book_id,
-                { $set: { isReading: false } },
-                { new: true }
-            ).exec()
-            return booksInRead
-        }
-        if (isReading === false) {
-            const booksInRead = await this.bookModel.findByIdAndUpdate(
-
-                book_id,
-                { $set: { isReading: true } },
-                { new: true }
-            ).exec()
-            return booksInRead
+        if (limitOfDocuments) {
+            query.limit(limitOfDocuments)
         }
 
+        const results = await query.exec()
+        const count = await this.bookModel.countDocuments({ user: user._id }).exec()
+
+        return { results, count };
+
     }
-    async getBook(id: string) {
+
+    async getBooksStatus(userId: string, status: string, documentToShip = 0, limitOfDocuments?: number, startId?: string) {
+
+
+        let user = await this.userModel.findById(userId)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        const query = this.bookModel.find({
+            user: user._id,
+            status: status,
+            ...(startId && { _id: { $gt: startId } })
+        })
+            .sort({ _id: -1 })
+            .populate('category')
+            .populate('author')
+            .populate('publisher')
+            .skip(documentToShip)
+
+        if (limitOfDocuments) {
+            query.limit(limitOfDocuments)
+        }
+
+        const results = await query.exec()
+        const count = await this.bookModel.countDocuments({ user: user._id, status: status }).exec()
+
+        return { results, count };
+
+    }
+
+    async getBookReading(user_id: string) {
+        const bookReading = await this.bookModel.find({ user: user_id, status: "CURRENTLY_READING" }).populate("author").populate("category").populate("publisher").exec()
+        return bookReading
+    }
+    async getBookRead(user_id: string) {
+        const bookReading = await this.bookModel.find({ user: user_id, status: "READ" }).populate("author").populate("category").populate("publisher").exec()
+        return bookReading
+    }
+    async getBookToBeRead(user_id: string) {
+        const bookReading = await this.bookModel.find({ user: user_id, status: "TO_BE_READ" }).populate("author").populate("category").populate("publisher").exec()
+        return bookReading
+    }
+
+    async getBook(id: string, userId: string) {
+        let user = await this.userModel.findById(userId)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
         if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestException('Invalid ID format');
         }
@@ -123,9 +148,15 @@ export class BooksService {
     }
 
 
-    async modifyBook(BookUpdated: BookUpdated) {
+    async modifyBook(BookUpdated: BookUpdated, user_id: string) {
 
-        const existingBook = await this.bookModel.findById(BookUpdated._id).exec()
+        let user = await this.userModel.findById(user_id)
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+
+        const existingBook = await this.bookModel.findOne({ _id: BookUpdated._id, user: user_id }).exec()
         if (!existingBook) {
             throw new ConflictException('This book do\'nt exist')
         }
@@ -158,13 +189,13 @@ export class BooksService {
                 publisher: publisher,
 
             }, { new: true })
-        console.log(updatedBook)
+
         return updatedBook
 
     }
 
-    async deleteBook(bookId: string) {
-        const deleteBook = await this.bookModel.deleteOne({ _id: bookId }).exec()
+    async deleteBook(bookId: string, user_id: string) {
+        const deleteBook = await this.bookModel.deleteOne({ _id: bookId, user: user_id }).exec()
         return deleteBook
     }
 

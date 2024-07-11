@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { BookDTO } from './book.dto';
 
@@ -22,48 +22,47 @@ export class BooksController {
 
     @Post('/new')
     async createBook(@Body() BookDTO: BookDTO) {
-        console.log("controller book, DTO:", BookDTO)
 
         return this.BookService.createBook(BookDTO)
     }
 
-    @Get()
-    getAllBooks() {
-        return this.BookService.getAllBooks()
+    @Get('/:userId')
+    getAllBooks(@Param('userId') userId: string, @Query('documentToSkip') documentToSkip?: number, @Query('limitOfDocuments') limitOfDocuments?: number) {
+        return this.BookService.getAllBooks(userId, documentToSkip, limitOfDocuments)
+    }
+    @Get('status/:userId')
+    getBooksStatus(@Param('userId') userId: string, @Query('status') status: string, @Query('documentToSkip') documentToSkip?: number, @Query('limitOfDocuments') limitOfDocuments?: number) {
+
+        return this.BookService.getBooksStatus(userId, status, documentToSkip, limitOfDocuments)
     }
 
-    @Get("/status/Reading")
-    getBookReading() {
-        return this.BookService.getBookReading()
+    @Get("/status/Reading/:user_id")
+    getBookReading(@Param('user_id') user_id: string) {
+        return this.BookService.getBookReading(user_id)
     }
-    @Get("/status/read")
-    getBookRead() {
-        return this.BookService.getBookRead()
+    @Get("/status/read/:user_id")
+    getBookRead(@Param('user_id') user_id: string) {
+        return this.BookService.getBookRead(user_id)
     }
-    @Get("/status/toBeRead")
-    getBookToBeRead() {
-        return this.BookService.getBookToBeRead()
-    }
-
-    @Put("/inRead/:book_id/")
-    putBookInRead(@Param('book_id') book_id: string, @Body('isReading') isReading: boolean) {
-        return this.BookService.putBookInRead(book_id, isReading)
+    @Get("/status/toBeRead/:user_id")
+    getBookToBeRead(@Param('user_id') user_id: string) {
+        return this.BookService.getBookToBeRead(user_id)
     }
 
-    @Get("/:id")
-    getBook(@Param('id') id: string) {
-        console.log("controleur get book id:", id)
-        return this.BookService.getBook(id)
+    @Get("/:id/:user_id")
+    getBook(@Param('id') id: string, @Param('user_id') userId: string) {
+
+        return this.BookService.getBook(id, userId)
     }
 
-    @Patch("/update")
-    modifyBook(@Body() BookUpdated: BookUpdated) {
-        return this.BookService.modifyBook(BookUpdated)
+    @Patch("/update/:user_id")
+    modifyBook(@Param('user_id') user_id: string, @Body() BookUpdated: BookUpdated) {
+        return this.BookService.modifyBook(BookUpdated, user_id)
 
     }
-    @Delete("/delete/:id")
-    deleteBook(@Param('id') bookToDelete: string) {
-        return this.BookService.deleteBook(bookToDelete)
+    @Delete("/delete/:id/:user_id")
+    deleteBook(@Param('id') bookToDelete: string, @Param('user_id') user_id: string) {
+        return this.BookService.deleteBook(bookToDelete, user_id)
 
     }
 

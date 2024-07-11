@@ -7,19 +7,12 @@ export class UserController {
 
     constructor(private readonly UserService: UserService) { }
 
+    @Get("/:email")
+    async getUserByMail(@Param('email') email: string) {
+        console.log(email)
+        const userInfo = await this.UserService.findUser(email)
+        const { password, ...userProtected } = userInfo;
+        return userProtected
 
-    @Get("/:id")
-    getUserById(@Param('id') id: string) {
-
-        return this.UserService.getUserById(id)
     }
-    // @Get("/books/:userId")
-    // getBooksFromUser(@Param('userId') userId: string) {
-
-    //     return this.UserService.getBooksFromUser(userId)
-    // }
-    // @Post('/new')
-    // async createUser(@Body() user: UserLoginDTO) {
-    //     return this.UserService.createUser(user)
-    // }
 }
