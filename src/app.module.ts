@@ -10,7 +10,6 @@ import { UserModule } from './user/user.module';
 import { PublisherModule } from './publisher/publisher.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
-import { FlilesService } from './fliles/fliles.service';
 
 @Module({
   imports: [
@@ -26,7 +25,7 @@ import { FlilesService } from './fliles/fliles.service';
     FilesModule,
   ],
   controllers: [AppController,],
-  providers: [AppService, FlilesService],
+  providers: [AppService],
 })
 export class AppModule {
 }

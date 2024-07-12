@@ -17,6 +17,8 @@ export class UserDTO {
 
     @Type(() => Book)
     books: Book[];
+
+    avatar: string
 }
 
 
