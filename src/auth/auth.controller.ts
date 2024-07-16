@@ -30,7 +30,7 @@ export class AuthController {
     }
 
     @Post('signIn')
-    async signIn(@Body() userInfo) {
+    async signIn(@Body() userInfo: any) {
         const user = await this.userService.findUser(userInfo.email)
         if (user) {
             const token = await this.authService.login(userInfo)
