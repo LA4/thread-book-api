@@ -17,7 +17,6 @@ export class BookDTO {
     @MinLength(3)
     title: string;
 
-
     @Type(() => Author)
     author: Author;
 

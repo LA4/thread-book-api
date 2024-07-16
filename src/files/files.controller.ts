@@ -41,7 +41,7 @@ export class FilesController {
         const file = createReadStream(filePath);
         console.log("stream:", file)
         res.set({
-            'Content-Type': 'image/png', // Assurez-vous que le type MIME est correct selon le type de fichier
+            'Content-Type': 'image/png',
             'Content-Disposition': `inline; filename="${filename}"`,
         });
         return new StreamableFile(file);
