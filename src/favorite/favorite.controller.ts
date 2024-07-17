@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { FavoriteService } from './favorite.service';
 
 @Controller('favorite')
@@ -10,6 +10,10 @@ export class FavoriteController {
 
     @Post()
     async addToFavorite(@Body() favoriteElements: { userId: string, bookId: string }) {
-        await this.favorite.addFavoriteBook(favoriteElements)
+        return await this.favorite.addFavoriteBook(favoriteElements)
+    }
+    @Post("/get")
+    async getFavotites(@Body() userId) {
+        return await this.favorite.getFavotites(userId.user)
     }
 }

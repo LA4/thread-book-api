@@ -19,6 +19,8 @@ export class User {
     books: Book[];
     @Prop()
     avatar: string
+    @Prop()
+    pageRead: number
 
 }
 export const UserSchema = SchemaFactory.createForClass(User)

@@ -22,7 +22,7 @@ export class FilesController {
         })
     }))
     async uplodedFiles(@Param('user_id') user_id: string, @UploadedFile() files: Express.Multer.File) {
-        console.log("uploaded file:", files)
+
         if (files) {
             await this.filesService.compressImage(files.path, files.path)
             this.filesService.uploadFile(user_id, files.filename)
@@ -39,7 +39,6 @@ export class FilesController {
         }
 
         const file = createReadStream(filePath);
-        console.log("stream:", file)
         res.set({
             'Content-Type': 'image/png',
             'Content-Disposition': `inline; filename="${filename}"`,

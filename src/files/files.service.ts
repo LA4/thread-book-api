@@ -39,16 +39,13 @@ export class FilesService {
             if (filePath) {
 
                 await fs.promises.unlink(filePath);
-                console.log(`Deleted file: ${filename}`);
             }
         } catch (error) {
             console.error(`Failed to delete file ${filename}:`, error);
         }
     }
     async compressImage(inputPath: string, outputPath: string) {
-        console.log(inputPath, outputPath)
         const image = await Jimp.read(inputPath)
-        console.log(image)
         image.resize(400, Jimp.AUTO)
         await image.writeAsync(outputPath)
     }

@@ -155,7 +155,6 @@ export class BooksService {
             throw new NotFoundException('User not found');
         }
 
-
         const existingBook = await this.bookModel.findOne({ _id: BookUpdated._id, user: user_id }).exec()
         if (!existingBook) {
             throw new ConflictException('This book do\'nt exist')
@@ -166,7 +165,6 @@ export class BooksService {
             const newauthor = new this.authorModel({ name: BookUpdated.author })
             author = await newauthor.save()
         }
-
         let category = await this.categoryModel.findOne({ name: BookUpdated.category }).exec();
         if (!category) {
             const newCategory = new this.categoryModel({ name: BookUpdated.category })
@@ -190,13 +188,27 @@ export class BooksService {
 
             }, { new: true })
 
-        return updatedBook
+        const userPages = await this.UserReadingPage(user._id.toString())
+        return { updatedBook, userPages }
 
     }
 
     async deleteBook(bookId: string, user_id: string) {
         const deleteBook = await this.bookModel.deleteOne({ _id: bookId, user: user_id }).exec()
         return deleteBook
+    }
+
+    async UserReadingPage(userId: string) {
+        const allUserBooks = await this.bookModel.find({ user: userId }).exec()
+        let userPageRead = 0
+        for (let pages of allUserBooks) {
+            userPageRead += pages.pageRead
+        }
+        const userPages = await this.userModel.findByIdAndUpdate(
+            userId,
+            { pageRead: userPageRead }, { new: true }
+        )
+        return userPages.pageRead
     }
 
 }

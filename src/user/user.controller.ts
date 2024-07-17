@@ -9,7 +9,6 @@ export class UserController {
 
     @Get("/:email")
     async getUserByMail(@Param('email') email: string) {
-        console.log(email)
         const userInfo = await this.UserService.findUser(email)
         const { password, ...userProtected } = userInfo;
         return userProtected
