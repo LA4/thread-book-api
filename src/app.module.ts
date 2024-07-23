@@ -11,6 +11,7 @@ import { PublisherModule } from './publisher/publisher.module';
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
 import { FavoriteModule } from './favorite/favorite.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FavoriteModule } from './favorite/favorite.module';
     AuthModule,
     FilesModule,
     FavoriteModule,
+    SearchModule,
   ],
   controllers: [AppController,],
   providers: [AppService],
