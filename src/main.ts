@@ -11,7 +11,8 @@ async function bootstrap() {
   app.enableCors({
     origin:'https://tread-book-front-web.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Allow cookies and other credentials
+    credentials: true, 
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Start the application
