@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors()
   app.use(cors({
     origin:   
  'https://tread-book-front-web.vercel.app',
