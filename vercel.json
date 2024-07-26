@@ -1,7 +1,11 @@
 {
     "version": 2,
     "builds": [
-      { "src": "dist/main.js", "use": "@vercel/node" }
+      { "src": "dist/main.js", "use": "@vercel/node", "config": {
+        "runtime": "nodejs16.x",
+        "installCommand": "yarn install",
+        "buildCommand": "yarn run build"
+      } }
     ],
     "routes": [
       { "src": "/(.*)", "dest": "dist/main.js" }
