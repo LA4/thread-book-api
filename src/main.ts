@@ -9,9 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   // CORS configuration
   app.enableCors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? 'https://tread-book-front-web.vercel.app' 
-      : 'http://localhost:3000', // Adjust for your local development URL
+    origin:'https://tread-book-front-web.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies and other credentials
   });
