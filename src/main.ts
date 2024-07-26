@@ -7,11 +7,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.useGlobalPipes(new ValidationPipe());
+  // CORS configuration
   app.enableCors({
-    origin: true, 
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://tread-book-front-web.vercel.app' 
+      : 'http://localhost:3000', // Adjust for your local development URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
+    credentials: true, // Allow cookies and other credentials
   });
+
+  // Start the application
+  await app.listen(process.env.PORT || 3000);
   // await app.listen(3000);
 }
 bootstrap();
