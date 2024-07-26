@@ -8,10 +8,10 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: 'https://tread-book-front-web.vercel.app', // ton URL frontend
+    origin: 'https://tread-book-front-web.vercel.app', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
-  await app.listen(3000);
+  // await app.listen(3000);
 }
 bootstrap();
